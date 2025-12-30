@@ -1,13 +1,20 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import cloudflare from '@astrojs/cloudflare';
 
-// https://astro.build/config
 export default defineConfig({
-    site: 'https://filmyfly.work',
-    output: 'static',
-    integrations: [sitemap()],
-    build: {
-        inlineStylesheets: 'auto',
-    },
-    compressHTML: true,
+  site: 'https://filmyfly.work',
+
+  // 👇 CHANGE HERE
+  output: 'server',
+
+  adapter: cloudflare(),
+
+  integrations: [sitemap()],
+
+  build: {
+    inlineStylesheets: 'auto',
+  },
+
+  compressHTML: true,
 });

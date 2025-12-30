@@ -30,6 +30,8 @@ const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://filmyfly.work';
   <!-- Author & Copyright -->
   <meta name="author" content="FilmyFly">
   <meta name="copyright" content="FilmyFly">
+  <!-- admaven -->
+  <meta name='admaven-placement' content=BqjwHpjkG>
   
   <!-- Robots & Indexing -->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -73,6 +75,15 @@ const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://filmyfly.work';
   
   <!-- Google Analytics -->
   {settings?.googleAnalytics && <Fragment set:html={settings.googleAnalytics} />}
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1E231HJEHJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1E231HJEHJ');
+</script>
   
   <!-- AdSense -->
   {settings?.adsenseCode && <Fragment set:html={settings.adsenseCode} />}
