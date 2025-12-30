@@ -1,0 +1,31 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  baseUrl?: string;
+}
+
+const { currentPage, totalPages, hasNextPage, hasPrevPage, baseUrl = '' } = Astro.props;
+---
+
+{totalPages > 1 && (
+  <center>
+    <div class="page">
+      {hasPrevPage && (
+        <a href={`${baseUrl}?page=${currentPage - 1}`}>❮ Previous</a>
+      )}
+      
+      {hasPrevPage && hasNextPage && (
+        <span style="margin: 0 10px;">
+          Page {currentPage}
+        </span>
+      )}
+      
+      {hasNextPage && (
+        <a href={`${baseUrl}?page=${currentPage + 1}`}>Next ❯</a>
+      )}
+    </div>
+  </center>
+)}

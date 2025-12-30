@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MovieCard from '../components/MovieCard.astro';
+import { getPublicSettings } from '../lib/api';
+import { generatePageSEO } from '../lib/seo';
+
+// Get settings for the layout
+const settingsData = await getPublicSettings();
+const settings = settingsData.data || {};
+
+const seo = generatePageSEO(
+  'Search Movies | FilmyFly',
+  'Search and download movies in HD quality.',
+  'search, movies, download'
+);
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <Header />
+  
+  <div align="center">
+    <h2 id="searchQuery"></h2>
+  </div>
+  
+  <div id="searchResults">
+    <p style="text-align: center; padding: 20px;">Loading search results...</p>
+  </div>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Client-side search implementation for static builds
+  const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080/api';
+  
+  // Get query from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const query = urlParams.get('to-search') || urlParams.get('q') || urlParams.get('query') || '';
+  const page = parseInt(urlParams.get('page') || '1');
+  
+  console.log('Client-side search - Query:', query, 'Page:', page);
+  
+  const searchQueryEl = document.getElementById('searchQuery');
+  const searchResultsEl = document.getElementById('searchResults');
+  
+  if (!query) {
+    if (searchQueryEl) searchQueryEl.innerHTML = '';
+    if (searchResultsEl) {
+      searchResultsEl.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Please enter a search query</p>';
+    }
+  } else {
+    if (searchQueryEl) {
+      searchQueryEl.innerHTML = `Search Results For <strong>${query}</strong>`;
+    }
+    
+    // Fetch search results
+    const searchUrl = `${API_BASE}/search?q=${encodeURIComponent(query)}&page=${page}&limit=20`;
+    console.log('Fetching:', searchUrl);
+    
+    fetch(searchUrl)
+      .then(res => res.json())
+      .then(data => {
+        console.log('Search results:', data);
+        
+        if (!data.success || !data.data || !data.data.movies) {
+          if (searchResultsEl) {
+            searchResultsEl.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Error loading search results</p>';
+          }
+          return;
+        }
+        
+        const movies = data.data.movies;
+        const pagination = data.data.pagination;
+        
+        if (movies.length === 0) {
+          if (searchResultsEl) {
+            searchResultsEl.innerHTML = `<p style="text-align: center; padding: 20px; color: #666;">No movies found matching "${query}"</p>`;
+          }
+          return;
+        }
+        
+        // Render movies using the same structure as MovieCard component
+        let html = '';
+        movies.forEach(movie => {
+          const thumbnailUrl = movie.thumbnail || '';
+          const movieUrl = `/${movie.slug}`;
+          const keywords = movie.keywords ? movie.keywords.split(',').map(k => k.trim()).filter(Boolean) : [];
+          
+          html += `
+            <div class="fllist">
+              <a href="${movieUrl}">
+                <div style="display: flex; align-items: center; padding: 5px;">
+                  ${thumbnailUrl ? `
+                    <img 
+                      src="${thumbnailUrl}" 
+                      alt="${movie.title}"
+                      width="80"
+                      height="120"
+                      style="object-fit: cover;"
+                    />
+                  ` : ''}
+                  <div style="flex: 1; padding-left: 10px;">
+                    <div class="movie-title">${movie.title}</div>
+                    <div style="font-size: 0.9em; color: #666; margin: 5px 0;">
+                      ${movie.releaseYear ? `<span>${movie.releaseYear}</span>` : ''}
+                      ${movie.genre ? `<span> • ${movie.genre}</span>` : ''}
+                    </div>
+                    ${keywords.length > 0 ? `
+                      <div style="margin-top: 5px;">
+                        ${keywords.slice(0, 3).map(keyword => 
+                          `<span class="movie-keywords-badge">${keyword}</span>`
+                        ).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+        });
+        
+        // Add pagination
+        if (pagination && pagination.totalPages > 1) {
+          html += '<center><div class="page">';
+          
+          if (pagination.hasPrevPage) {
+            html += `<a href="/search?to-search=${encodeURIComponent(query)}&page=${page - 1}">❮ Previous</a>`;
+          } else {
+            html += '<span class="btn disabled">❮ Previous</span>';
+          }
+          
+          if (pagination.hasPrevPage && pagination.hasNextPage) {
+            html += `<span style="margin: 0 10px;">Page ${pagination.page}</span>`;
+          }
+          
+          if (pagination.hasNextPage) {
+            html += `<a href="/search?to-search=${encodeURIComponent(query)}&page=${page + 1}">Next ❯</a>`;
+          } else {
+            html += '<span class="btn disabled">Next ❯</span>';
+          }
+          
+          html += '</div></center>';
+        }
+        
+        if (searchResultsEl) {
+          searchResultsEl.innerHTML = html;
+        }
+      })
+      .catch(error => {
+        console.error('Search error:', error);
+        if (searchResultsEl) {
+          searchResultsEl.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Error loading search results</p>';
+        }
+      });
+  }
+</script>
+

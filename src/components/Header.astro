@@ -1,0 +1,50 @@
+---
+const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://filmyfly.work';
+const displayUrl = SITE_URL.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+---
+
+<div align="center">
+  <div class="A1">
+    <a href="/">
+      <img src="/images/filmyflylogo.png" style="max-width: 400px;" width="100%" height="60" alt="FilmyFly" />
+    </a>
+  </div>
+  
+  <div align="center">
+    <div class="search">
+      <form id="searchForm" action="/search" method="get">
+        <input type="text" id="searchInput" name="to-search" size="20%" maxlength="2048" placeholder="Search movies..." />
+        <input type="submit" value="Search" />
+      </form>
+    </div>
+  </div>
+  
+  <center>
+    <h1>
+      <a href="/">{displayUrl} Movies And Web Series Downloads</a>
+    </h1>
+  </center>
+</div>
+
+<script>
+  // Debug form submission
+  const form = document.getElementById('searchForm');
+  const input = document.getElementById('searchInput');
+  
+  form?.addEventListener('submit', (e) => {
+    console.log('=== FORM SUBMISSION DEBUG ===');
+    console.log('Input value:', input?.value);
+    console.log('Input name:', input?.name);
+    console.log('Form action:', form.action);
+    console.log('Form method:', form.method);
+    
+    if (!input?.value || input.value.trim() === '') {
+      console.warn('WARNING: Search input is empty!');
+      alert('Please enter a search term');
+      e.preventDefault();
+      return false;
+    }
+    
+    console.log('Form will submit to:', `${form.action}?${input.name}=${encodeURIComponent(input.value)}`);
+  });
+</script>

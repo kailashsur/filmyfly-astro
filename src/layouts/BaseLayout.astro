@@ -1,0 +1,146 @@
+---
+import type { SEOProps } from '../lib/seo';
+import '../styles/global.css';
+
+interface Props {
+  seo: SEOProps;
+  settings?: any;
+}
+
+const { seo, settings } = Astro.props;
+const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://filmyfly.work';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager Head -->
+  {settings?.googleTagManagerHead && <Fragment set:html={settings.googleTagManagerHead} />}
+  
+  <!-- Primary Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- Title & Description -->
+  <title>{seo.title}</title>
+  <meta name="description" content={seo.description}>
+  {seo.keywords && <meta name="keywords" content={seo.keywords}>}
+  
+  <!-- Author & Copyright -->
+  <meta name="author" content="FilmyFly">
+  <meta name="copyright" content="FilmyFly">
+  
+  <!-- Robots & Indexing -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-image-preview:large">
+  
+  <!-- Language & Region -->
+  <meta name="language" content="English, Hindi">
+  <meta name="geo.region" content="IN">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content={seo.type || 'website'}>
+  <meta property="og:url" content={seo.url || SITE_URL}>
+  <meta property="og:title" content={seo.title}>
+  <meta property="og:description" content={seo.description}>
+  <meta property="og:image" content={seo.image || `${SITE_URL}/images/filmyflylogo.png`}>
+  <meta property="og:site_name" content="FilmyFly">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content={seo.url || SITE_URL}>
+  <meta name="twitter:title" content={seo.title}>
+  <meta name="twitter:description" content={seo.description}>
+  <meta name="twitter:image" content={seo.image || `${SITE_URL}/images/filmyflylogo.png`}>
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href={seo.url || SITE_URL}>
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/images/filmyfly.png" type="image/png">
+  <link rel="icon" href="/images/filmyfly.png" type="image/png">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0066ff">
+  
+  <!-- DNS Prefetch -->
+  <link rel="dns-prefetch" href="//www.googletagmanager.com">
+  <link rel="dns-prefetch" href="//www.google-analytics.com">
+  
+  <!-- Google Search Console -->
+  {settings?.googleSearchConsole && <Fragment set:html={settings.googleSearchConsole} />}
+  
+  <!-- Google Analytics -->
+  {settings?.googleAnalytics && <Fragment set:html={settings.googleAnalytics} />}
+  
+  <!-- AdSense -->
+  {settings?.adsenseCode && <Fragment set:html={settings.adsenseCode} />}
+  
+  <!-- Adstera -->
+  {settings?.adsteraCode && <Fragment set:html={settings.adsteraCode} />}
+  
+  <!-- Structured Data (JSON-LD) -->
+  {seo.structuredData && (
+    <script type="application/ld+json" set:html={JSON.stringify(seo.structuredData)} />
+  )}
+  
+  <!-- Website Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "FilmyFly",
+      "url": "{SITE_URL}",
+      "description": "Download latest Bollywood, Hollywood, South Hindi dubbed movies and web series in HD quality.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{SITE_URL}/search?to-search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <!-- Google Tag Manager Body -->
+  {settings?.googleTagManagerBody && <Fragment set:html={settings.googleTagManagerBody} />}
+  
+  <slot />
+  
+  <!-- Random Color Script for Movie Titles and Keywords -->
+  <script is:inline>
+    // Random color generator for movie keywords badges
+    document.querySelectorAll('.movie-keywords-badge').forEach(function (badge) {
+      var randomColor;
+      var brightness;
+      var r, g, b;
+      do {
+        randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        var hex = randomColor.padStart(6, '0');
+        r = parseInt(hex.substr(0, 2), 16);
+        g = parseInt(hex.substr(2, 2), 16);
+        b = parseInt(hex.substr(4, 2), 16);
+        brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      } while (brightness > 120 || brightness < 30 || (r > 200 && g > 200 && b > 200));
+      badge.style.background = '#' + randomColor.padStart(6, '0');
+    });
+    
+    // Random color generator for movie titles
+    document.querySelectorAll('.movie-title').forEach(function (title) {
+      var randomColor;
+      var brightness;
+      var r, g, b;
+      do {
+        randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        var hex = randomColor.padStart(6, '0');
+        r = parseInt(hex.substr(0, 2), 16);
+        g = parseInt(hex.substr(2, 2), 16);
+        b = parseInt(hex.substr(4, 2), 16);
+        brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      } while (brightness > 120 || brightness < 30 || (r > 200 && g > 200 && b > 200));
+      title.style.color = '#' + randomColor.padStart(6, '0');
+    });
+  </script>
+</body>
+</html>

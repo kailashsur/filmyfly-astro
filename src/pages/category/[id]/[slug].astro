@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import MovieCard from '../../../components/MovieCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getCategoryBySlug, getCategories, getPublicSettings } from '../../../lib/api';
+import { generateCategorySEO } from '../../../lib/seo';
+
+export async function getStaticPaths() {
+  const categoriesData = await getCategories();
+  
+  if (!categoriesData.success || !categoriesData.data) {
+    return [];
+  }
+  
+  return categoriesData.data.map(category => ({
+    params: { 
+      id: category.id.toString(),
+      slug: category.slug 
+    }
+  }));
+}
+
+const { id, slug } = Astro.params;
+const page = parseInt(Astro.url.searchParams.get('page') || '1');
+
+const categoryData = await getCategoryBySlug(slug!, page);
+const settingsData = await getPublicSettings();
+
+if (!categoryData.success || !categoryData.data) {
+  return Astro.redirect('/404');
+}
+
+const { category, movies, pagination } = categoryData.data;
+const settings = settingsData.data || {};
+
+const seo = generateCategorySEO(category);
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <Header />
+  
+  <div>
+    <h2><center>📂 {category.name} 📂</center></h2>
+    {category.description && (
+      <p style="text-align: center; padding: 10px;">{category.description}</p>
+    )}
+  </div>
+  
+  {movies && movies.length > 0 ? (
+    <>
+      {movies.map(movie => (
+        <MovieCard movie={movie} />
+      ))}
+      
+      <Pagination 
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        hasNextPage={pagination.hasNextPage}
+        hasPrevPage={pagination.hasPrevPage}
+        baseUrl={`/category/${id}/${slug}`}
+      />
+    </>
+  ) : (
+    <p style="text-align: center; padding: 20px;">No movies found in this category.</p>
+  )}
+  
+  <Footer />
+</BaseLayout>

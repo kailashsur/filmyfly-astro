@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getPublicSettings } from '../../lib/api';
+import { generatePageSEO } from '../../lib/seo';
+
+// For static builds, we need getStaticPaths
+// We'll create a catch-all route and handle everything client-side
+export async function getStaticPaths() {
+  // Return common static pages
+  // The actual content will be loaded client-side
+  return [
+    { params: { slug: 'privacy-policy' } },
+    { params: { slug: 'contact-us' } },
+    { params: { slug: 'about-us' } },
+    { params: { slug: 'dmca' } },
+    { params: { slug: 'how-to-download-movie' } },
+  ];
+}
+
+// Get settings for the layout
+const settingsData = await getPublicSettings();
+const settings = settingsData.data || {};
+
+const seo = generatePageSEO(
+  'FilmyFly',
+  'FilmyFly - Download Latest Movies',
+  'movies, download'
+);
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <Header />
+  
+  <div align="center">
+    <h2 id="pageTitle">Loading...</h2>
+  </div>
+  
+  <div class="A1" style="padding: 20px;" id="pageContent">
+    <p style="text-align: center; color: #666;">Loading page content...</p>
+  </div>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Client-side page loading for static builds
+  const API_BASE = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080/api';
+  
+  // Get slug from URL path
+  const pathParts = window.location.pathname.split('/');
+  const slug = pathParts[pathParts.length - 1];
+  
+  console.log('Loading static page:', slug);
+  
+  const pageTitleEl = document.getElementById('pageTitle');
+  const pageContentEl = document.getElementById('pageContent');
+  
+  if (!slug || slug === 'page') {
+    if (pageTitleEl) pageTitleEl.textContent = 'Page Not Found';
+    if (pageContentEl) {
+      pageContentEl.innerHTML = '<p style="text-align: center; color: #666;">Invalid page URL</p>';
+    }
+  } else {
+    // Fetch page content from API
+    const pageUrl = `${API_BASE}/static-pages/${slug}`;
+    console.log('Fetching page:', pageUrl);
+    
+    fetch(pageUrl)
+      .then(res => res.json())
+      .then(data => {
+        console.log('Page data:', data);
+        
+        if (!data.success || !data.data) {
+          if (pageTitleEl) pageTitleEl.textContent = 'Page Not Found';
+          if (pageContentEl) {
+            pageContentEl.innerHTML = '<p style="text-align: center; color: #666;">The requested page could not be found.</p>';
+          }
+          return;
+        }
+        
+        const page = data.data;
+        
+        // Update page title
+        if (pageTitleEl) {
+          pageTitleEl.textContent = page.title;
+        }
+        
+        // Update document title
+        document.title = page.metaTitle || page.title || 'FilmyFly';
+        
+        // Update page content
+        if (pageContentEl) {
+          pageContentEl.innerHTML = page.content || '<p>No content available</p>';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading page:', error);
+        if (pageTitleEl) pageTitleEl.textContent = 'Error';
+        if (pageContentEl) {
+          pageContentEl.innerHTML = '<p style="text-align: center; color: #666;">Error loading page content.</p>';
+        }
+      });
+  }
+</script>
+

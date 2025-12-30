@@ -1,0 +1,22 @@
+{
+  "name": "filmyfly-astro",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "FilmyFly Astro Frontend - SEO-optimized movie download website",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [
+    "astro",
+    "filmyfly",
+    "movies",
+    "seo"
+  ],
+  "dependencies": {
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.6"
+  }
+}

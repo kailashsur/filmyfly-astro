@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MovieCard from '../components/MovieCard.astro';
+import Pagination from '../components/Pagination.astro';
+import { getHomePageData, getPublicSettings } from '../lib/api';
+import { generatePageSEO } from '../lib/seo';
+
+// Get page number from URL
+const page = parseInt(Astro.url.searchParams.get('page') || '1');
+
+// Fetch data from API
+const homeData = await getHomePageData(page);
+const settingsData = await getPublicSettings();
+
+if (!homeData.success || !homeData.data) {
+  return Astro.redirect('/404');
+}
+
+const { trendingMovies, recentMovies, categories, pagination } = homeData.data;
+const settings = settingsData.data || {};
+
+// Generate SEO
+const seo = generatePageSEO(
+  'FilmyFly - Download Latest Bollywood, Hollywood, South Hindi Dubbed Movies & Web Series in HD 2025',
+  'Download latest Bollywood movies, Hollywood Hindi dubbed movies, South Indian movies, Web Series in HD quality. Free movie downloads in 480p, 720p, 1080p.',
+  'filmyfly, filmy4wap, download movies, bollywood movies, hollywood movies, south movies, hindi dubbed movies, web series, hd movies, free movies'
+);
+---
+
+<BaseLayout seo={seo} settings={settings}>
+  <Header />
+  
+  <center>
+    <h1><a href="/page/how-to-download-movie">How To Download Movies On FilmyFly</a></h1>
+  </center>
+  
+  <!-- Trending Movies Section -->
+  {trendingMovies && trendingMovies.length > 0 && (
+    <div>
+      <h2><center>🔥 Trending Movies 🔥</center></h2>
+      {trendingMovies.map(movie => (
+        <MovieCard movie={movie} />
+      ))}
+    </div>
+  )}
+  
+  <!-- Recent Movies Section -->
+  <div>
+    <h2><center>📽️ Latest Movies 📽️</center></h2>
+    {recentMovies && recentMovies.length > 0 ? (
+      recentMovies.map(movie => (
+        <MovieCard movie={movie} />
+      ))
+    ) : (
+      <p style="text-align: center; padding: 20px;">No movies found.</p>
+    )}
+  </div>
+  
+  <!-- Pagination -->
+  <Pagination 
+    currentPage={pagination.page}
+    totalPages={pagination.totalPages}
+    hasNextPage={pagination.hasNextPage}
+    hasPrevPage={pagination.hasPrevPage}
+    baseUrl="/"
+  />
+  
+  <!-- Categories Section -->
+  <div>
+    <h2><center>📂Select Category📂</center></h2>
+  </div>
+  
+  <br />
+  
+  {categories && categories.length > 0 && categories.map(category => (
+    <center>
+      <div class="cat">
+        <a href={`/category/${category.id}/${category.slug}`}>
+          <div>
+            <img src="/images/ff32.png" alt="FilmyFly" />&nbsp;<b>{category.name}</b>
+          </div>
+        </a>
+      </div>
+    </center>
+  ))}
+  
+  <br />
+  
+  <!-- SEO Content -->
+<div class="A1">
+    <div align="left">
+      <font color="green"><b>Tag:</b></font>Download movies online in HD with FilmyFly.xy No registration required.
+      You can download latest Hollywood films, Bollywood films, Tamil films and more at a single click with HD quality
+      and enjoy the best HD movies for free! – <strong>filmyFly.xyz</strong><br><strong>filmy4wapp</strong>
+      filmy4waap xyz,filmy4wapp official,filmy4waap south movie 2024,filmy4wap movie 2024,filmy4wap link,filmy4wap.xyz
+      pushpa 2,filmy4wap xyz link,filmy4wap south movie 2024 new,filmy4wap xyz nota 2024 south hindi,filmy4wap app
+      <strong>filmy4wap.in app</strong> <strong>Filmy4wap.xyz</strong>filmy4wap website, jalshamoviez hd
+      <strong>filmyFly.xyz</strong> no.1 movie site new latest movie download filmy4wap.xy new <strong>bollywood movie
+        filmy4wap.xyz</strong>, latest bollywood movie filmy4wap filmy4web, South Indian Hindi Dubbed movie
+      filmy4wap.xyz south hindi dubbed <b>filmy4wap best south Indian movie</b>, top bollywood movies filmy4wap
+      superhit hindi dubbed movie punjabi movie filmy4wap hollywood movie filmy4wa.xyz action movie filmy4wap thriller
+      movie filmy4wap filmyzila filmy4wap <strong>filmyzilla filmy4wap</strong> sci fi movie filmy4wap comedy film
+      filmy4wap filmy store, mcu movies filmy4wap marvel's movie filmy4wap marvel cinematic universe filmy4wap
+      avengers movie filmy4wap tamil movie filmy4wap telegu movie filmy4wap new released movie filmy4wap trending
+      movie filmy4wap free movie download filmy4wap hd movie download filmy4wap 480p hd movie filmy4wap 720p hd movie
+      filmy4wap 300mb movie filmy4wap full hd movie Filmy4Wap no1 hd movie download site filmy4wap, download in
+      <strong>7starhd</strong>, 9xmovie
+    </div>
+  </div>
+  
+  <Footer />
+</BaseLayout>

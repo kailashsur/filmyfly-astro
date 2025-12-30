@@ -1,0 +1,293 @@
+/* FilmyFly Global Styles - Migrated from EJS */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: verdana, "Comic Sans MS", Helvetica, sans-serif;
+  font-size: small;
+  background: #fff;
+  color: #000;
+}
+
+a {
+  text-decoration: none;
+  color: #006699;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Header Styles */
+.search {
+  background: #006699;
+  border: 1px dashed #fff;
+  padding: 2px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.search input[type="text"] {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.search input[type="submit"] {
+  padding: 5px 15px;
+  background: #fff;
+  color: #006699;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+h1 {
+  background: #eee;
+  color: #222;
+  border: 1px solid rgb(170, 187, 204);
+  font-size: 110%;
+  padding: 5px;
+  font-weight: bold;
+}
+
+h1 a {
+  color: #222;
+}
+
+h2 {
+  color: #006699;
+  background: rgb(221, 231, 241);
+  border: 1px solid rgb(170, 187, 204);
+  font-size: 110%;
+  padding: 5px;
+  font-weight: bold;
+}
+
+h2 a {
+  color: #006699;
+}
+
+h3 {
+  color: #fff;
+  background: #006699;
+  padding: 5px;
+}
+
+/* Movie Grid Styles */
+.fllist {
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  padding: 7px 2px;
+}
+
+.fllist:hover {
+  background: #f5f5f5;
+}
+
+.fllist a {
+  display: block;
+  padding: 0px;
+}
+
+.fllist img {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 0;
+  margin-right: 5px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Movie Card */
+.movie-thumb {
+  position: relative;
+  display: inline-block;
+}
+
+.movie-thumb img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Movie Title - will have random colors via JS */
+.movie-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 5px 0;
+}
+
+/* Movie Keywords Badge */
+.movie-keywords-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  margin: 2px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Category Styles */
+.cat {
+  background: #fcfcfc;
+  border-bottom: 1px #ccc solid;
+  padding: 12px 7px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.cat:hover {
+  background: #f3f3f3;
+}
+
+/* Pagination */
+.page {
+  padding: 3px;
+  text-align: center;
+}
+
+.page a {
+  border: 1px solid #000;
+  background: #555;
+  color: #fff;
+  padding: 5px 8px;
+  margin: 2px 1px 5px 1px;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+.page a:hover {
+  background: #111;
+  color: #f5f5f5;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.page span {
+  background: #111;
+  color: #f5f5f5;
+  text-shadow: 1px 1px 1px #000;
+  padding: 5px 8px;
+  margin: 2px 1px 5px 1px;
+  border: 1px #000 solid;
+  border-radius: 3px;
+}
+
+/* Movie Detail Page */
+.fname {
+  border-bottom: 1px #ccc solid;
+  padding: 7px;
+  font-weight: bold;
+}
+
+.colora { display: inline-block; color: red; }
+.colorb { display: inline-block; color: #ff6600; }
+.colorc { display: inline-block; color: #009900; }
+.colord { display: inline-block; color: #0033cc; }
+.colore { display: inline-block; color: #333300; }
+.colorf { display: inline-block; color: #993333; }
+.colorg { display: inline-block; color: #9933ff; }
+
+/* Download Button */
+.dlbtn {
+  text-align: center;
+  font-size: 0.8em;
+}
+
+.dlbtn a {
+  text-align: center;
+  padding: 15px 6px;
+  border-radius: 5px;
+  margin: 10px;
+  display: inline-block;
+  font-weight: 700;
+  color: #fff;
+  width: 70%;
+  max-width: 300px;
+  text-decoration: none;
+  background-image: linear-gradient(#0066ff, #003d99);
+}
+
+.dlbtn a:hover {
+  opacity: 0.9;
+  color: #fff;
+}
+
+/* Breadcrumb */
+.brcrmb {
+  background: #f0f0f0;
+  border-top: 1px #bbb solid;
+  padding: 7px;
+  font-weight: bold;
+}
+
+/* Info Box */
+.A1 {
+  background-color: rgb(221, 231, 241);
+  border: 1px solid rgb(170, 187, 204);
+  padding: 10px;
+  margin: 10px 0;
+}
+
+/* Footer Buttons */
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 3px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.button1 { background-color: white; color: black; border: 2px solid #4CAF50; }
+.button2 { background-color: white; color: black; border: 2px solid #008CBA; }
+.button3 { background-color: white; color: black; border: 2px solid #f44336; }
+.button4 { background-color: white; color: black; border: 2px solid #e7e7e7; }
+.button5 { background-color: white; color: black; border: 2px solid #555555; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    font-size: smaller;
+  }
+  
+  .dlbtn a {
+    width: 90%;
+  }
+  
+  .movie-thumb img {
+    max-width: 100%;
+  }
+}
+
+/* Grid Layout for Movies */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 10px;
+}
+
+@media (max-width: 480px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+}

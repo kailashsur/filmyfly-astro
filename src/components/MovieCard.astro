@@ -1,0 +1,40 @@
+---
+import type { Movie } from '../lib/api';
+
+interface Props {
+  movie: Movie;
+}
+
+const { movie } = Astro.props;
+const keywords = movie.keywords?.split(',').map(k => k.trim()).filter(Boolean) || [];
+---
+
+<div class="fllist">
+  <a href={`/${movie.slug}`}>
+    <div style="display: flex; align-items: center; padding: 5px;">
+      {movie.thumbnail && (
+        <img 
+          src={movie.thumbnail} 
+          alt={movie.title}
+          width="80"
+          height="120"
+          style="object-fit: cover;"
+        />
+      )}
+      <div style="flex: 1; padding-left: 10px;">
+        <div class="movie-title">{movie.title}</div>
+        <div style="font-size: 0.9em; color: #666; margin: 5px 0;">
+          {movie.releaseYear && <span>{movie.releaseYear}</span>}
+          {movie.genre && <span> • {movie.genre}</span>}
+        </div>
+        {keywords.length > 0 && (
+          <div style="margin-top: 5px;">
+            {keywords.slice(0, 3).map(keyword => (
+              <span class="movie-keywords-badge">{keyword}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </a>
+</div>
