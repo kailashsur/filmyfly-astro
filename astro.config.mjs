@@ -1,14 +1,14 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import cloudflare from '@astrojs/cloudflare';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://filmyfly.work',
 
-  // 👇 CHANGE HERE
+  // SSR mode for Vercel
   output: 'server',
 
-  adapter: cloudflare(),
+  adapter: vercel(),
 
   integrations: [sitemap()],
 
