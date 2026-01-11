@@ -92,15 +92,20 @@ const ADMAVEN_SCRIPT_ID2 = import.meta.env.PUBLIC_ADMAVEN_SCRIPT_ID2;
   <!-- Google tag (gtag.js) FIXME: Add Google tag (gtag.js) -->
   {GOOGLE_ANALYTICS_ID && (
     <>
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}></script>
-      <script is:inline define:vars={{ GOOGLE_ANALYTICS_ID }}>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', {GOOGLE_ANALYTICS_ID});
-      </script>
+     <!-- Google tag (gtag.js) -->
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}></script>
+<script is:inline define:vars={{ GOOGLE_ANALYTICS_ID }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', {GOOGLE_ANALYTICS_ID});
+</script>
     </>
   )}
+
+
+  
 
 
 
