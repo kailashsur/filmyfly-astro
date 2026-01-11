@@ -10,6 +10,7 @@ interface Props {
 const { seo, settings } = Astro.props;
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL || "https://filmyfly.work";
 const GOOGLE_ANALYTICS_ID = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
+const GOOGLE_TAG_MANAGER_ID = import.meta.env.PUBLIC_GOOGLE_TAG_MANAGER_ID;
 const ADMAVEN_PLACEMENT_ID = import.meta.env.PUBLIC_ADMAVEN_PLACEMENT_ID;
 const ADMAVEN_SCRIPT_ID1 = import.meta.env.PUBLIC_ADMAVEN_SCRIPT_ID1;
 const ADMAVEN_SCRIPT_ID2 = import.meta.env.PUBLIC_ADMAVEN_SCRIPT_ID2;
@@ -20,6 +21,14 @@ const ADMAVEN_SCRIPT_ID2 = import.meta.env.PUBLIC_ADMAVEN_SCRIPT_ID2;
   <head>
     <!-- Google Tag Manager Head -->
 <!-- TODO: Add Google Tag Manager Head -->
+ 
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer',`${GOOGLE_TAG_MANAGER_ID}`);</script>
+<!-- End Google Tag Manager -->
 
     <!-- Primary Meta Tags -->
     <meta charset="UTF-8" />
@@ -94,7 +103,7 @@ const ADMAVEN_SCRIPT_ID2 = import.meta.env.PUBLIC_ADMAVEN_SCRIPT_ID2;
     <>
      <!-- Google tag (gtag.js) -->
 <script async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}></script>
-<script is:inline define:vars={{ GOOGLE_ANALYTICS_ID }}>
+<script >
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -147,7 +156,10 @@ const ADMAVEN_SCRIPT_ID2 = import.meta.env.PUBLIC_ADMAVEN_SCRIPT_ID2;
 
   <body>
     <!-- Google Tag Manager Body -->
-
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${GOOGLE_TAG_MANAGER_ID}`}
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
     <slot />
 
