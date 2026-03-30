@@ -1,4 +1,6 @@
 ---
+export const prerender = true;
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -7,13 +9,12 @@ import { getMovieBySlug, getMovies, getPublicSettings } from '../lib/api';
 import { generateMovieSEO } from '../lib/seo';
 
 export async function getStaticPaths() {
-  // Fetch all movies to generate static paths
-  const moviesData = await getMovies(1, 1000); // Adjust limit as needed
-  
-  if (!moviesData.success || !moviesData.data) {
+  const moviesData = await getMovies(1, 1000);
+
+  if (!moviesData?.success || !moviesData?.data) {
     return [];
   }
-  
+
   return moviesData.data.map(movie => ({
     params: { slug: movie.slug }
   }));
@@ -21,108 +22,17 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 
-// Fetch movie data
-const movieData = await getMovieBySlug(slug!);
-const settingsData = await getPublicSettings();
+let movieData;
+let settingsData;
 
-if (!movieData.success || !movieData.data) {
-  return Astro.redirect('/404');
+try {
+  movieData = await getMovieBySlug(slug!);
+  settingsData = await getPublicSettings();
+} catch (err) {
+  return new Response(null, { status: 404 });
 }
 
-const { movie, relatedMovies, downloadRedirectUrl } = movieData.data;
-const settings = settingsData.data || {};
-
-// Generate SEO
-const seo = generateMovieSEO(movie, downloadRedirectUrl);
-
-// Generate comprehensive SEO tag with multiple variations
-const movieTitle = movie.title;
-const year = movie.releaseYear || new Date().getFullYear();
-const genre = movie.genre || 'Bollywood Hindi Movie';
-
-const longTag = `${movieTitle} ${year} ${genre} HD ESub Filmy4wap,${movieTitle} ${year} ${genre} HD ESub,${movieTitle} ${year} ${genre} HD ESub filmy4wap.xyz,${movieTitle} ${year} ${genre} HD ESub 480p Download,${movieTitle} ${year} ${genre} HD ESub 720p Download,${movieTitle} ${year} ${genre} HD ESub HEVC Download,${movieTitle} ${year} ${genre} HD ESub Filmy4wep,${movieTitle} ${year} ${genre} HD ESub filmywap,${movieTitle} ${year} ${genre} HD ESub 400mb,${movieTitle} ${year} ${genre} HD ESub Full Movie Download,${movieTitle} ${year} ${genre} HD ESub filmy4wap.com.de,${movieTitle} ${year} ${genre} HD ESub filmy4wap.Pro,${movieTitle} ${year} ${genre} HD ESub filmy4wap.xy,${movieTitle} ${year} ${genre} HD ESub Filmy4wap.in,${movieTitle} ${year} ${genre} HD ESub 1filmy4wap.in,filmy4wap.xyz,filmy4wap.com.de`;
+if (!movieData?.success || !movieData?.data) {
+  return new Response(null, { status: 404 });
+}
 ---
-
-<BaseLayout seo={seo} settings={settings}>
-  <Header />
-  
-  <div align="center">
-    <h2>{movie.title}</h2>
-  </div>
-  
-  <div align="center">
-    <div class="movie-thumb">
-      {movie.thumbnail && (
-        <img src={movie.thumbnail} width="280px" alt={movie.title} />
-      )}
-    </div>
-  </div>
-  
-  <h2>
-    <center><font color="red">👉File Info👈</font></center>
-  </h2>
-  
-  <div class="fname">Name: <div class="colora">{movie.title}</div></div>
-  <div class="fname">Genre: <div class="colorb">{movie.genre || ''}</div></div>
-  <div class="fname">Duration: <div class="colorc">{movie.duration || ''}</div></div>
-  <div class="fname">Release Date: <div class="colord">{movie.releaseYear || ''}</div></div>
-  <div class="fname">Language: <div class="colore">{movie.languages || ''}</div></div>
-  <div class="fname">Starcast: <div class="colorf">{movie.cast || ''}</div></div>
-  <div class="fname">Size: <div class="colorg">{movie.sizes || ''}</div></div>
-  <div class="fname">Description: <div class="colorg">{movie.description || ''}</div></div>
-  
-  <center>
-    <h3 class="header4">DOWNLOAD THIS MOVIE</h3>
-  </center>
-  
-  <div class="dlbtn">
-    <a href={`${downloadRedirectUrl}${movie.downloadUrl}`} class="dl">
-      Download {movie.sizes || ''}
-    </a>
-  </div>
-  
-  {movie.screenshot && (
-    <>
-      <center>
-        <h3 class="header4">SCREENSHOT</h3>
-        <div class="article">
-          <div class="ss">
-            <img src={movie.screenshot} style="max-width: 100%;" alt={`${movie.title} screenshot`} />
-          </div>
-        </div>
-      </center>
-    </>
-  )}
-  
-  <!-- Related Movies -->
-  {relatedMovies && relatedMovies.length > 0 && (
-    <div>
-      <h2><center>🎬 Related Movies 🎬</center></h2>
-      {relatedMovies.map(relatedMovie => (
-        <MovieCard movie={relatedMovie} />
-      ))}
-    </div>
-  )}
-  
-  <!-- Breadcrumb -->
-  <div align="center">
-    <div class="brcrmb cap">
-      <a href="/">Home</a>
-      {movie.category && (
-        <>
-          » <a href={`/category/${movie.category.id}/${movie.category.slug}`}>{movie.category.name}</a>
-        </>
-      )}
-      » {movie.title}
-    </div>
-    
-    <div class="A1">
-      <div align="left">
-        <font color="green"><b>Tag:</b></font>
-        {longTag}
-      </div>
-    </div>
-  </div>
-  
-  <Footer />
-</BaseLayout>
